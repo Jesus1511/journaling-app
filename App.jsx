@@ -4,7 +4,9 @@ import MainScreen from './src/Navigation/MainScreen'
 import {loadFonts, initializeLanguage} from './src/utils'
 import { NativeRouter, Routes, Route } from 'react-router-native';
 import SetDaily from './src/Navigation/SetDaily';
-import setMonthGoals from './src/components/setMonthGoals/setMonthGoals';
+import SetMonthGoals from './src/components/setMonthGoals/SetMonthGoals';
+import RateDay from './src/components/rateDay/RateDay';
+import Notifications from './src/components/Notifications';
 
 const App = () => {
 
@@ -31,11 +33,14 @@ const App = () => {
       return (
         <NativeRouter>
           <StatusBar barStyle="light-content" backgroundColor="#f7f7f7" />
-          <Routes>
-            <Route path='/'         element={<MainScreen />} />
-            <Route path='/setDaily' element={<SetDaily />}   />
-            <Route path='/setMonth' element={<setMonthGoals />}   />
-          </Routes>
+          <Notifications>
+            <Routes>
+              <Route path='/'         element={<MainScreen />}   />
+              <Route path='/setDaily' element={<SetDaily />}     />
+              <Route path='/setMonth' element={<SetMonthGoals />}/>
+              <Route path='/rateDay'  element={<RateDay />}      />
+            </Routes>
+          </Notifications>
         </NativeRouter>
       )
     }

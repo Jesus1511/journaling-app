@@ -4,12 +4,12 @@ import toAMorPM from '../../utils/AmPm'
 import { getTranslation } from '../../utils/useLenguage'
 import { useNavigate } from 'react-router-native'
 import { CheckBox } from 'react-native-elements'
-import { hoursOfDay } from '../../utils/constanst'
+import { hourOfDayCustom } from '../../utils/constanst'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import separarIcon from '../../../assets/images/separarIcon.png'
 import { v4 as uuidv4 } from 'uuid';
 import ColorsMenu from './ColorsMenu'
-
+import { Header } from '../Header'
 
 export const Daily = () => {
 
@@ -59,7 +59,7 @@ export const Daily = () => {
 
   }
 
-  function handlePress () {
+  async function handlePress () {
     if (listo) {
       navigation("/")
     }
@@ -116,15 +116,16 @@ export const Daily = () => {
     }
   }
 
-  function handleDivide(index) {
+  async function handleDivide(index) {
     let newHours = [...hours];
-
+    const storedDayStart = parseInt(await AsyncStorage.getItem('dayStart'));
+  
     const combinedObject = newHours.find((hour) => hour.index === index);
-
+  
     if (combinedObject && Array.isArray(combinedObject.hours)) {
       // Elimina el objeto combinado del array
       newHours = newHours.filter((hour) => hour.index !== index);
-
+  
       // Divide los objetos respetando el orden de la propiedad 'hours'
       const separatedHours = combinedObject.hours.map((hourValue) => ({
         hours: [hourValue], // Asegurarse de que 'hours' sea un array
@@ -133,24 +134,32 @@ export const Daily = () => {
         color: combinedObject.color,
         index: ramdonKey() // Clave única para cada elemento
       }));
-
+  
       // Añadir los objetos divididos nuevamente al array
       newHours.splice(index, 0, ...separatedHours);
-
-      // Ordenar los objetos por la propiedad 'hours' para mantener el orden
+  
+      // Ordenar los objetos comenzando desde `storedDayStart`
       newHours.sort((a, b) => {
         const aValue = Array.isArray(a.hours) ? a.hours[0] : a.hours;
         const bValue = Array.isArray(b.hours) ? b.hours[0] : b.hours;
-        return aValue - bValue;
+  
+        // Calcula la distancia desde `storedDayStart` para ordenar
+        const distanceA = (aValue - storedDayStart + 24) % 24;
+        const distanceB = (bValue - storedDayStart + 24) % 24;
+  
+        return distanceA - distanceB;
       });
-
+  
       setHours(newHours); // Actualizar el estado con los objetos ordenados
     }
   }
+  
 
   useEffect(() => {
     async function a () {
       let presetHours = []
+      let storedDayStart = parseInt(await AsyncStorage.getItem('dayStart'))
+      const hoursOfDay = hourOfDayCustom(storedDayStart)
       hoursOfDay.map((hour) => {
         presetHours.push({index: ramdonKey(), hours: [hour], text: "", selected: false, color: "#dedede",})
       })
@@ -165,7 +174,7 @@ export const Daily = () => {
 
   useEffect(() => {
     async function a () {
-      if (hours) { await AsyncStorage.setItem('hours', JSON.stringify(hours)) }
+      if (hours) { await AsyncStorage.setItem('hours', JSON.stringify(hours)); }
     }; a()
     if (hours) {isTwoSelected();}
     if (hours) {allIsCompleted()}
@@ -205,20 +214,20 @@ export const Daily = () => {
   } else {
     return (
       <>
-      <ScrollView style={{padding: 15}}>
-        <View style={{height: 35,}}/>
+      <ScrollView >
+        <Header text={getTranslation('daily', 2)}/>
 
         {hours.map((hour, index) => (
-          <View key={index}>
+          <View style={{padding: 15}} key={index}>
             {visible == hour.index && (
-              <ColorsMenu hour={hour} setVisible={setVisible} setHours={setHours} hours={hours}/>
-            )}
+              <ColorsMenu hour={hour} setVisible={setVisible} setHours={setHours} hours={hours}/>        
+              )}
             <View>
               <Text>{toAMorPM(hour.hours[0])}</Text>
               <View style={styles.bar}/>
             </View>
 
-            <View style={styles.iconsContainer}>
+            <View style={[styles.iconsContainer,{backgroundColor:hour.color, marginVertical:4}]}>
               <View style={styles.horasContainer}>
                 {hour.hours.map((hours, index) => (
                   index !== 0 && (
@@ -230,10 +239,6 @@ export const Daily = () => {
                 value={hour.text} style={{width:155, marginRight: 15}}
                 placeholder={getTranslation("today", 6)} defaultValue={hour.text}
                 onChange={(e) => {handleText(e, hour.index)}} returnKeyType="done"/>
-
-
-{/*
-              <TouchableOpacity onPress={()=>handleColorInput(hour.index)} style={[styles.colorButton, {backgroundColor: hour.color}]}/> */}
 
               <View style={{flexDirection:"row-reverse", alignItems:"center"}}>
                 <CheckBox checked={hour.selected} onPress={()=>handleChecking(hour.index)}/>
@@ -247,6 +252,7 @@ export const Daily = () => {
                 </View>
               </View>
             </View>
+            
           </View>
         ))}
         <View style={{height: 250,}}/>
@@ -289,7 +295,8 @@ const styles = StyleSheet.create({
   },
     iconsContainer: {
       flexDirection: "row",
-      alignItems:"center"
+      alignItems:"center",
+      zIndex:0,
     },
     bar:{
       height:1,
@@ -310,7 +317,7 @@ const styles = StyleSheet.create({
     },
     horasContainer: {
       paddingTop: 50,
-      width: 50,
+      width: 55,
     },
     colorButton: {
       borderRadius: 220,

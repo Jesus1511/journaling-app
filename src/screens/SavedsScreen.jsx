@@ -1,30 +1,49 @@
 import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native'
-import React from 'react'
+import {useState, useEffect} from 'react'
 import { DayMap, Goals, SecundaryGoals} from '../components/Saveds'
 import { Header } from '../components/Header';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigate } from 'react-router-native';
 
 const { width, height } = Dimensions.get("window");
 
-const s = [50, 100, 100, 25, 50, 50, 75,
-            0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0
-]
-
-const d = ["superar 500kg en press banca",
-            "conquistar stonio para navidad",
-            "derrotar al chavismo y asesinar a Yulimar Rojas"
-]
-
 const SavedsScreen = () => {
+
+  const [goals, setGoals] = useState(null)
+  const [month, setMonth] = useState(null)
+  const navigator = useNavigate()
+
+  useEffect(() => {
+    cargarGoals()
+    cargarCalifications()
+  },[])
+  
+  async function cargarGoals () {
+    const newGoals = JSON.parse(await AsyncStorage.getItem('month'))
+    if (!newGoals || newGoals.length == 0) {
+      navigator('/setMonth')
+      return
+    }
+    setGoals(newGoals)
+  }
+
+  async function cargarCalifications () {
+    //await AsyncStorage.removeItem('califications')
+    const storedCalifications = JSON.parse(await AsyncStorage.getItem('califications'))
+    if (!storedCalifications) {
+      setMonth([])
+      return
+    }
+
+    setMonth(storedCalifications)
+  }
+
   return (
       <ScrollView style={styles.mainView}>
         <Header text={"info"}/>
-        <DayMap days={s}/>
+        <DayMap days={month}/>
         <SecundaryGoals/>
-        <Goals Goals={d}/>
+        {goals && (<Goals Goals={goals}/>)}
         <View style={{height: 350,}}/>
       </ScrollView>
     )

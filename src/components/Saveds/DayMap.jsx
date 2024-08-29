@@ -1,9 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import {useState} from 'react'
 import { getTranslation } from '../../utils'
 
-
 export const DayMap = ({days}) => {
+
+    return (
+      <View style={styles.dadView}>
+        <Text style={{width: "81%", marginBottom:5, fontSize: 16}}>{getTranslation('today',3)}</Text>
+        <View style={styles.mainView}>
+          <Days days={days}/>
+        </View>
+      </View>
+    )
+}
+
+const Days = ({days}) => {
 
   function defineColor (porcent) {
     if (porcent == 0) {
@@ -23,20 +34,23 @@ export const DayMap = ({days}) => {
     }
   }
 
-  return (
-    <View style={styles.dadView}>
-      <Text style={{width: "81%", marginBottom:5, fontSize: 16}}>{getTranslation('today',3)}</Text>
-      <View style={styles.mainView}>
+  if (days) {
+    return (
+      <>
         {days.map((day, index) => (
-          <View key={index} style={styles.dayContainer}>
-            <View style={[styles.miniBox, {backgroundColor: defineColor(day)}]}>
-              <Text style={{fontSize: 10, color:"black", textAlign: "center"}}>{day}%</Text>
-            </View>
-          </View>
-        ))}
-      </View>
+           <View key={index} style={styles.dayContainer}>
+             <View style={[styles.miniBox, {backgroundColor: defineColor(day.calification)}]}>
+               <Text style={{fontSize: 10, color:"black", textAlign: "center"}}>{day.calification !== null?day.calification +"%":getTranslation('month', 2)}</Text>
+             </View>
+           </View>
+         ))}
+      </> 
+      )
+  } else {
+    <View style={{justifyContent:"center", alignItems:"center"}}>
+      <ActivityIndicator />
     </View>
-  )
+  }
 }
 
 const styles = StyleSheet.create({

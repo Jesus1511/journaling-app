@@ -1,14 +1,11 @@
 import { StyleSheet, Text, View, Dimensions, ActivityIndicator} from 'react-native'
 import React from 'react'
 import { getTranslation } from '../../utils'
-import { useState, useEffect } from 'react'
 import toAMorPM from '../../utils/AmPm'
 
 const {width} = Dimensions.get('window')
 
-export const TimeLine = ({tareas}) => {
-
-  const [now, setNow] = useState("");
+export const TimeLine = ({tareas, currentHour}) => {
 
   function shortener (tarea, horas) {
       if (tarea.length > 25*horas) {
@@ -26,14 +23,12 @@ export const TimeLine = ({tareas}) => {
     }
   }
   
-  
   return (
     <View style={{alignItems: "center", paddingTop:50}}>
         <Text style={{width: "83%", marginBottom:20, fontSize: 16}}>{getTranslation("today",2)}</Text>
         {
           tareas ? (
             tareas.map((tarea, index) => (
-              <>
                 <View key={index} style={styles.mainView}>
                     <View style={[styles.horas]}>
                       <Text style={styles.textHour} key={index}>{toAMorPM(tarea.hours[0])}</Text>
@@ -42,19 +37,19 @@ export const TimeLine = ({tareas}) => {
                     <View style={{flexDirection:"row-reverse"}}>
                       <View key={tarea.hours[0]} style={[styles.heroView,{backgroundColor: tarea.color, height: calculateHeight(tarea.hours.length)}]}>
                           <Text style={{maxWidth:220, fontSize:18, fontFamily:"Montserrat-Bold"}}>{shortener(tarea.text, tarea.hours.length)}</Text>
+                          <Text style={{fontFamily:"Montserrat-Regular", fontSize:17}}>{tarea.hours.length}h</Text>
                       </View>
                       <View>
                         {tarea.hours.map((hour, index) => (
                             index !== 0 && (
                               <View key={index}>
-                                <Text style={[styles.textHour, {marginTop: 60}]}>{toAMorPM(hour)}</Text>
+                                <Text style={[styles.textHour, {marginTop: 60, fontWeight:hour == currentHour?700:300}]}>{toAMorPM(hour)}</Text>
                               </View>
                             )
                           ))}
                       </View>
                     </View>
                 </View>
-              </>
             ))
           ) : (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center"}}>

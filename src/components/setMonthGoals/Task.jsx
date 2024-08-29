@@ -3,19 +3,17 @@ import React from 'react'
 import { CheckBox } from 'react-native-elements'
 import trash from '../../../assets/images/trash.png'
 
-export const Task = ({tareas, complete, handleCompleted, handleDeleted}) => {
+const { width } = Dimensions.get("window");
+
+export const Task = ({tareas, handleDeleted}) => {
   return (
-    <View style={{marginTop: complete?40:0}}>
+    <View>
       {tareas.map((goal, index) => (
-        <View style={[styles.tasksContainer, goal.complete && styles.completedContainerTask]} key={index}>
-          <Text style={[styles.task, goal.complete && styles.completedTask]}>{goal.text}</Text>
-          <View style={styles.buttonsContainer}>
-            <Text>{goal.importance}%</Text>
-            <CheckBox checked={complete} onPress={() => handleCompleted(goal.index)}/>
-            <TouchableOpacity onPress={() => handleDeleted(goal.index)} style={styles.buttons}>
+        <View style={styles.tasksContainer} key={index}>
+          <Text style={styles.task}>{goal.importance}° {goal.text}</Text>
+          <TouchableOpacity onPress={() => handleDeleted(goal.index)} style={styles.buttons}>
               <Image style={{ width: 20, height: 20,}} source={trash}/>
             </TouchableOpacity>
-          </View>
         </View>
       ))}
     </View>
@@ -29,21 +27,18 @@ const styles = StyleSheet.create({
   },
   tasksContainer: {
     flexDirection: "row",
-    width: 330,
     marginVertical: 5,
+    width:300,
     padding: 10,
     borderRadius:10,
-    backgroundColor: "#f7f7f7"
+    justifyContent:"center"
   },
   task: {
     textAlignVertical:"center",
-    width: 185,
     marginRight: 4,
-
-  },
-  completedTask: {
-    textDecorationLine: 'line-through',
-    color: '#d0d0d0',
+    fontSize: 18,
+    textAlign:"left",
+    width: 250,
   },
   buttonsContainer: {
     flexDirection: "row",

@@ -2,11 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator } fr
 import React from 'react'
 import { getTranslation } from '../../utils'
 import { useState, useEffect } from 'react'
+import toAMorPM from '../../utils/AmPm'
 
-export const Hero = ({tarea}) => {
+export const Hero = ({tarea, currentHour}) => {
 
   const [shortenedText, setShortenedText] = useState('');
-  const [now, setNow] = useState(false);
   const [h, setH] = useState(45)
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export const Hero = ({tarea}) => {
     }
   }, [tarea]);
 
+
   return (
     <View style={{alignItems: "center", paddingTop:50}}>
         <Text style={{width: "83%", marginBottom:5, fontSize: 16}}>{getTranslation("today",1)}</Text>
@@ -32,11 +33,12 @@ export const Hero = ({tarea}) => {
               <>
               <View style={styles.horas}>
                 {tarea.hours.map((hora) => (
-                  <Text style={{fontSize: 20, fontFamily:"Montserrat-Regular", fontWeight:now?"700":"300"}} key={hora}>{hora}</Text>
+                  <Text style={{fontSize: 15, fontFamily:"Montserrat-Regular", fontWeight:hora == currentHour?"700":"300"}} key={hora}>{toAMorPM(hora)}</Text>
                 ))}
               </View>
-              <View >
-                <Text style={{width:220, fontSize:25, fontFamily:"Montserrat-Bold"}}>{shortenedText}</Text>
+              <View style={{flexDirection:"row"}}>
+                <Text style={{width:200, fontSize:25, fontFamily:"Montserrat-Bold"}}>{shortenedText}</Text>
+                <Text style={{fontFamily:"Montserrat-Regular", fontSize:17}}>{tarea.hours.length}h</Text>
               </View>
               <TouchableOpacity>
                 <Image source={tarea.notificacion?"":""}/>
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   heroView: {
     width: "90%",
     borderRadius: 10,
-    paddingHorizontal:30,
+    paddingHorizontal:14,
     paddingVertical: 17,
     flexDirection: "row",
     justifyContent:"space-between",
@@ -66,6 +68,7 @@ const styles = StyleSheet.create({
   },
   horas: {
     justifyContent: "space-around",
+    paddingRight:20
   }
 
 })
