@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, StatusBar } from 'react-native'
-import {useState, useEffect} from 'react'
+import { StyleSheet, Text, View, StatusBar, ActivityIndicator} from 'react-native'
+import { useState, useEffect } from 'react'
 import MainScreen from './src/Navigation/MainScreen'
 import {loadFonts, initializeLanguage} from './src/utils'
-import { NativeRouter, Routes, Route, useNavigate } from 'react-router-native';
+import { NativeRouter, Routes, Route } from 'react-router-native';
 import SetDaily from './src/Navigation/SetDaily';
+import setMonthGoals from './src/components/setMonthGoals/setMonthGoals';
 
 const App = () => {
 
@@ -23,9 +24,7 @@ const App = () => {
     if (!LanguageLoaded || !fontsLoaded) {
       return (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center"}}>
-            <Text>
-              Loading
-            </Text>
+            <ActivityIndicator />
         </View>
       )
     } else {
@@ -33,8 +32,9 @@ const App = () => {
         <NativeRouter>
           <StatusBar barStyle="light-content" backgroundColor="#f7f7f7" />
           <Routes>
-            <Route path='/setDaily'         element={<MainScreen />} />
-            <Route path='/' element={<SetDaily />} />
+            <Route path='/'         element={<MainScreen />} />
+            <Route path='/setDaily' element={<SetDaily />}   />
+            <Route path='/setMonth' element={<setMonthGoals />}   />
           </Routes>
         </NativeRouter>
       )

@@ -5,11 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const translations = {
   es: {
     today: ["Hoy",   "Ahora deberias estar...", "para hoy", "Este mes", "Metas del mes", "Tareas Diarias", "+  añadir elemento", 'Seleccionar importancia', 'Tu día esta 100% ocupado'],
-    daily: ["Listo", "Unir"]
+    daily: ["Listo", "Unir"],
+    menu:  ["Editar horario", "Editar Tareas", "Cambiar idioma"],
+    month: ["Define tus metas para este mes"]
+
   },
   en: {
     today: ["Today", "right now you should be...", "for today", "This month", "Month Goals", "Daily Tasks", "+  add element", 'Select importance','Your day is 100% busy'],
-    daily: ["Done", "Link"]
+    daily: ["Done", "Link"],
+    menu:  ["Edit Calendar", "Edit Tasks", "Change Idiom"],
+    month: ["Define your goals for this month"]
 
   },
 };

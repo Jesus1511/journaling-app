@@ -3,10 +3,10 @@ import React from 'react'
 
 const { width } = Dimensions.get("window");
 
-export const Header = () => {
+export const Header = ({text}) => {
   return (
     <View style={styles.mainView}>
-      <Text style={styles.text}>Info</Text>
+      <Text style={styles.text}>{text}</Text>
       <TouchableOpacity>
         <View/>
       </TouchableOpacity>

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native'
 import React from 'react'
-import {Header, DayMap, Goals, SecundaryGoals} from '../components/Saveds'
+import { DayMap, Goals, SecundaryGoals} from '../components/Saveds'
+import { Header } from '../components/Header';
 
 
 const { width, height } = Dimensions.get("window");
@@ -20,7 +21,7 @@ const d = ["superar 500kg en press banca",
 const SavedsScreen = () => {
   return (
       <ScrollView style={styles.mainView}>
-        <Header />
+        <Header text={"info"}/>
         <DayMap days={s}/>
         <SecundaryGoals/>
         <Goals Goals={d}/>

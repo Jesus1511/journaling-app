@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { getTranslation } from '../../utils'
 import { useState, useEffect } from 'react'
@@ -7,31 +7,47 @@ export const Hero = ({tarea}) => {
 
   const [shortenedText, setShortenedText] = useState('');
   const [now, setNow] = useState(false);
-
+  const [h, setH] = useState(45)
 
   useEffect(() => {
-    if (tarea.name.length > 15) {
-      setShortenedText(tarea.name.substring(0, 45) + '...');
-    } else {
-      setShortenedText(tarea.name);
+    if (tarea) {
+      
+      if (tarea.text.length > 15) {
+        setShortenedText(tarea.text.substring(0, 45) + '...');
+      } else {
+        setShortenedText(tarea.text);
+      }
+
+      setH(45*tarea.hours.length)
     }
   }, [tarea]);
 
   return (
     <View style={{alignItems: "center", paddingTop:50}}>
         <Text style={{width: "83%", marginBottom:5, fontSize: 16}}>{getTranslation("today",1)}</Text>
-        <View style={[styles.heroView,{backgroundColor: tarea.color}]}>
-          <View style={styles.horas}>
-            {tarea.horas.map((hora) => (
-              <Text style={{fontSize: 20, fontFamily:"Montserrat-Regular", fontWeight:now?"700":"300"}} key={hora}>{hora}</Text>
-            ))}
-          </View>
-          <View >
-            <Text style={{width:220, fontSize:25, fontFamily:"Montserrat-Bold"}}>{shortenedText}</Text>
-          </View>
-          <TouchableOpacity>
-            <Image source={tarea.notificacion?"":""}/>
-          </TouchableOpacity>
+        <View style={[styles.heroView,{height: h, backgroundColor: tarea == null? "#dedede":tarea.color}]}>
+          {
+            tarea  ? 
+            (
+              <>
+              <View style={styles.horas}>
+                {tarea.hours.map((hora) => (
+                  <Text style={{fontSize: 20, fontFamily:"Montserrat-Regular", fontWeight:now?"700":"300"}} key={hora}>{hora}</Text>
+                ))}
+              </View>
+              <View >
+                <Text style={{width:220, fontSize:25, fontFamily:"Montserrat-Bold"}}>{shortenedText}</Text>
+              </View>
+              <TouchableOpacity>
+                <Image source={tarea.notificacion?"":""}/>
+              </TouchableOpacity>
+              </>
+            ):(
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "center"}}>
+                <ActivityIndicator />
+              </View>
+            )
+          }
         </View>
     </View>
   )
@@ -41,16 +57,15 @@ const styles = StyleSheet.create({
 
   heroView: {
     width: "90%",
-    height: 180,
     borderRadius: 10,
     paddingHorizontal:30,
     paddingVertical: 17,
     flexDirection: "row",
-    justifyContent:"space-between"
+    justifyContent:"space-between",
+    minHeight: 70,
   },
   horas: {
     justifyContent: "space-around",
-    maxHeight: 135
   }
 
 })

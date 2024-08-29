@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { CheckBox } from 'react-native-elements'
+import trash from '../../../assets/images/trash.png'
 
 const { width } = Dimensions.get("window");
 
@@ -11,11 +13,9 @@ export const Task = ({tareas, complete, handleCompleted, handleDeleted}) => {
           <Text style={[styles.task, goal.complete && styles.completedTask]}>{goal.text}</Text>
           <View style={styles.buttonsContainer}>
             <Text>{goal.importance}%</Text>
-            <TouchableOpacity onPress={() => handleCompleted(goal.index)} style={[styles.buttons, {backgroundColor: goal.complete ? "green" : "red"}]}>
-              <Image />
-            </TouchableOpacity>
+            <CheckBox checked={complete} onPress={() => handleCompleted(goal.index)}/>
             <TouchableOpacity onPress={() => handleDeleted(goal.index)} style={styles.buttons}>
-              <Image />
+              <Image style={{ width: 20, height: 20,}} source={trash}/>
             </TouchableOpacity>
           </View>
         </View>
@@ -26,22 +26,22 @@ export const Task = ({tareas, complete, handleCompleted, handleDeleted}) => {
 
 const styles = StyleSheet.create({
   buttons: {
-    backgroundColor: "red",
     width: 20,
     height: 20,
-    margin: 2
   },
   tasksContainer: {
     flexDirection: "row",
-    width,
+    width: 330,
     marginVertical: 5,
-    padding: 20,
+    padding: 10,
+    borderRadius:10,
     backgroundColor: "#f7f7f7"
   },
   task: {
-    marginVertical: 5,
-    width: "70%",
-    marginRight: "4%"
+    textAlignVertical:"center",
+    width: 185,
+    marginRight: 4,
+
   },
   completedTask: {
     textDecorationLine: 'line-through',
@@ -49,9 +49,8 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "row",
-    width: "28%",
+    width: 100,
     alignItems: "center",
-    justifyContent: "space-between"
   },
   completedContainerTask: {
     backgroundColor:"#f7f7f73f"

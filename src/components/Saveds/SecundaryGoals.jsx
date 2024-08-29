@@ -1,21 +1,27 @@
-import { StyleSheet, Text, View, TextInput, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Dimensions, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNPickerSelect from 'react-native-picker-select';
 import { Task } from './Task';
 import { getTranslation } from '../../utils';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const {width} = Dimensions.get("window");
 
 export const SecundaryGoals = () => {
   const [value, setValue] = useState("");
-  const [importance, setImportance] = useState(""); // Inicializamos el porcentaje de importancia
+  const [importance, setImportance] = useState(10); // Inicializamos el porcentaje de importancia
   const [secundaryGoals, setSecundaryGoals] = useState(null);
 
-  const calculateTotalImportance = () => {
-    return secundaryGoals?.reduce((total, goal) => total + (goal.complete ? 0 : goal.importance), 0) || 0;
+  const ramdonKey = async () => {
+    return uuidv4();
   };
 
+  const calculateTotalImportance = () => {
+    // Sumamos la importancia de todas las tareas, independientemente de si están completas o no
+    return secundaryGoals?.reduce((total, goal) => total + goal.importance, 0) || 0;
+  };
   const availableImportance = 100 - calculateTotalImportance();
 
   const generatePickerItems = () => {
@@ -27,7 +33,10 @@ export const SecundaryGoals = () => {
   };
 
   async function handleSubmit() {
-    const newElement = { text: value, importance: importance, index: secundaryGoals.length, complete: false };
+    if (value == "") {
+      return
+    }
+    const newElement = { text: value, importance: importance, index: ramdonKey(), complete: false };
     const newGoals = [...secundaryGoals, newElement].sort((a, b) => b.importance - a.importance); // Ordenar por importancia
     setSecundaryGoals(newGoals);
     setValue("");
@@ -37,15 +46,13 @@ export const SecundaryGoals = () => {
   }
 
   async function handleCompleted(taskIndex) {
-    const updatedGoals = [...secundaryGoals];
-    const goalToUpdate = updatedGoals.find(goal => goal.index === taskIndex);
-
-    if (goalToUpdate) {
-      goalToUpdate.complete = !goalToUpdate.complete;
-      setSecundaryGoals(updatedGoals);
-      await AsyncStorage.setItem('secundaryGoals', JSON.stringify(updatedGoals));
-    }
+    const updatedGoals = secundaryGoals.map(goal =>
+      goal.index === taskIndex ? { ...goal, complete: !goal.complete } : goal
+    );
+    setSecundaryGoals(updatedGoals);
+    await AsyncStorage.setItem('secundaryGoals', JSON.stringify(updatedGoals));
   }
+  
 
   async function handleDeleted(taskIndex) {
     const updatedGoals = secundaryGoals.filter(goal => goal.index !== taskIndex);
@@ -65,12 +72,16 @@ export const SecundaryGoals = () => {
     loadGoals();
   }, []);
 
+  useEffect(() => {
+    if (importance < 10 && calculateTotalImportance() < 100) {
+      setImportance(10)
+    }
+  }, [value]);
+
   if (secundaryGoals == null) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>
-          Loading...
-        </Text>
+        <ActivityIndicator />
       </View>
     );
   } else {
@@ -123,6 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginHorizontal: 20,
     textAlignVertical: 'center',
+    marginTop:10,
   },
   inputContainer: {
     flexDirection: "row",
