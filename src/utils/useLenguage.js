@@ -9,7 +9,10 @@ const translations = {
     menu:  ["Editar horario", "Cambiar hora de control", "Cambiar idioma", "Hora de Despertar"],
     month: ["Metas del Mes", "Califica el Día", "vacio"],
     question: ["¿Que tan productivo fuiste en este bloque de tiempo?"],
-    noti: ["it is", "It's time to organize tomorrow"]
+    noti: ["it is", "It's time to organize tomorrow"],
+    slides: ["Bienvenido a Trackiu!!", "En Trackiu puedes organizar y hacer seguimiento de tu productividad diaria, anotar tus tareas y cumplir tu objetivos",
+            "Puedes Definir lo que planeas hacer cada una de las 24h del día y luego darle un porcentaje según lo productivo o no que fuiste en este periodo de tiempo", "¿A que hora te sueles levantar"
+    ]
 
   },
   en: {

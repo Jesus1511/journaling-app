@@ -23,10 +23,10 @@ export default function Notifications({children}) {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
+    registerForPushNotificationsAsync()
 
     if (Platform.OS === 'android') {
-      Notificationss.getNotificationChannelsAsync().then(value => setChannels(value ?? []));
+      Notificationss.getNotificationChannelsAsync()
     }
 
     responseListener.current = Notificationss.addNotificationResponseReceivedListener(response => {

@@ -7,6 +7,7 @@ import SetDaily from './src/Navigation/SetDaily';
 import SetMonthGoals from './src/components/setMonthGoals/SetMonthGoals';
 import RateDay from './src/components/rateDay/RateDay';
 import Notifications from './src/components/Notifications';
+import AppGuide from './src/components/AppGuide/AppGuide';
 
 const App = () => {
 
@@ -39,6 +40,7 @@ const App = () => {
               <Route path='/setDaily' element={<SetDaily />}     />
               <Route path='/setMonth' element={<SetMonthGoals />}/>
               <Route path='/rateDay'  element={<RateDay />}      />
+              <Route path='/appguide' element={<AppGuide />}     />
             </Routes>
           </Notifications>
         </NativeRouter>

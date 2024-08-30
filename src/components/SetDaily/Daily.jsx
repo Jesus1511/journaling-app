@@ -163,8 +163,8 @@ export const Daily = () => {
       hoursOfDay.map((hour) => {
         presetHours.push({index: ramdonKey(), hours: [hour], text: "", selected: false, color: "#dedede",})
       })
-      let storedHours = JSON.parse(await AsyncStorage.getItem('hours')) || presetHours
-      if (storedHours == []) {
+      let storedHours = JSON.parse(await AsyncStorage.getItem('hours'))
+      if (storedHours.length <= 0 || !storedHours) {
         storedHours = presetHours
       }
       setHours(storedHours)
@@ -203,7 +203,6 @@ export const Daily = () => {
     })
     setlisto(listos)
   }
-
 
   if (hours == null) {
     return (

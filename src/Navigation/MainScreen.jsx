@@ -14,9 +14,17 @@ const MainScreen = () => {
   const {schedulePushNotification} = useContext(NotificationContext)
 
   useEffect(() => {
-
-    definirMomento()
+    redirectGuide()
   },[])
+
+  async function redirectGuide() {
+    const didSee = new Boolean(await AsyncStorage.getItem('guide'))
+    if (didSee == false) {
+      navigation('/appguide')
+    } else {
+      definirMomento()
+    }
+  }
 
   async function definirMomento () {
 
@@ -35,15 +43,17 @@ const MainScreen = () => {
     }
 
     if (!storedEditHour) {
-      await AsyncStorage.setItem('editHour','21')
-      schedulePushNotification(21)
-      storedEditHour = 21
+      await AsyncStorage.setItem('editHour', (currentHour+9).toString())
+      schedulePushNotification(currentHour+9)
+      storedEditHour = currentHour+9
     }
 
     if (currentHour >= storedEditHour && isDayEnded < currentDay){
       navigation('/rateDay')
     }
   }
+
+
 
   return (
     <>

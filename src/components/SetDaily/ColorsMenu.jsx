@@ -15,8 +15,6 @@ const ColorsMenu = ({setHours, hour, hours, setVisible}) => {
       setVisible(null)
     }
 
-    console.log(colors)
-
   return (
     <View style={styles.dropdownMenu}>
       {colors.map((color, index) => (

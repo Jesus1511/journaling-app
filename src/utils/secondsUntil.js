@@ -1,6 +1,6 @@
 export function getSecondsUntil(hour, minute) {
     // Validar los parámetros
-    if (hour < 1 || hour > 24 || minute < 1 || minute > 60) {
+    if (hour < 1 || hour > 24 || minute < 0 || minute > 60) {
       throw new Error('Hora debe estar entre 1 y 24, y minutos entre 1 y 60');
     }
   

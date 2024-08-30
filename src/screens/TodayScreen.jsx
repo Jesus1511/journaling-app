@@ -19,7 +19,7 @@ const TodayScreen = () => {
   const [tareas, setTareas] = useState(null)
   const [tareaNow, setTareaNow] = useState(null)
   const [openMenu, setOpenMenu] = useState(false)
-  const [editHour, setEditHour] = useState(21)
+  const [editHour, setEditHour] = useState(currentHour+9)
   const [dayStart, setDayStart] = useState(6)
   const [idiom, setIdiom] = useState("Español")
   const navigation = useNavigate()
@@ -50,7 +50,7 @@ const TodayScreen = () => {
   async function cargarEditHour () {
     const storedHour = parseInt(await AsyncStorage.getItem('editHour'))
     if (!storedHour) {
-      setEditHour(21)
+      setEditHour(currentHour+9)
       return
     }
     setEditHour(storedHour)
