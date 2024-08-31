@@ -133,7 +133,6 @@ function handleCalification(index, calification) {
         {
           tareas && RatedTasks.length > 0 ? (
             tareas.map((tarea, index) => (
-              <>
                 <View key={index} style={styles.mainView}>
                     <View style={[styles.horas]}>
                       <Text style={styles.textHour} key={index}>{toAMorPM(tarea.hours[0])}</Text>
@@ -179,7 +178,7 @@ function handleCalification(index, calification) {
                     )}
                 </View>
 
-              </>
+
             )
           )
           ) : (

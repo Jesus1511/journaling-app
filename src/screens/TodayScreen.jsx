@@ -30,7 +30,7 @@ const TodayScreen = () => {
       const newTareas = JSON.parse(await AsyncStorage.getItem('hours'))
       let tareaNow
       if (!newTareas || newTareas.length == 0) {
-        navigation('/setDaily')
+        return
       }
       newTareas.map((tarea) => {
         tarea.hours.map((hour) => {

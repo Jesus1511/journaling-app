@@ -1,10 +1,7 @@
 import { View, Image, Text, StyleSheet, Dimensions } from "react-native"
 import RNPickerSelect from 'react-native-picker-select'
 import { hoursOfDay } from "../../utils/constanst";
-import { useContext } from "react";
 import toAMorPM from "../../utils/AmPm";
-import * as Notificationss from 'expo-notifications'
-import { NotificationContext } from "../Notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getTranslation } from '../../utils/useLenguage';
@@ -13,7 +10,6 @@ const { width, height } = Dimensions.get('window');
 
 export const Slide = ({slide, editHour, setEditHour}) => {
 
-  const {schedulePushNotification} = useContext(NotificationContext)
 
   const generatePickerItems = () => {
     let items = [];
@@ -25,10 +21,6 @@ export const Slide = ({slide, editHour, setEditHour}) => {
 
   async function settingEditHour (hour) {
     setEditHour(hour)
-    await Notificationss.cancelAllScheduledNotificationsAsync();
-
-    schedulePushNotification(hour)
-
     await AsyncStorage.setItem('dayStart', hour.toString())
   }
 

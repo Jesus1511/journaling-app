@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "journaling-app",
-    "slug": "journaling-app",
+    "name": "trackIt",
+    "slug": "trackIt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -33,9 +33,17 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
+          "icon": "./assets/images/icon.png",
           "color": "#ffffff",
           "defaultChannel": "default"
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "journaling-app",
+          "organization": "no-tengo-xd"
         }
       ]
     ],

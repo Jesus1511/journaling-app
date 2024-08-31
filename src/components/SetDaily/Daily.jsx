@@ -7,7 +7,7 @@ import { CheckBox } from 'react-native-elements'
 import { hourOfDayCustom } from '../../utils/constanst'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import separarIcon from '../../../assets/images/separarIcon.png'
-import { v4 as uuidv4 } from 'uuid';
+import * as Crypto from 'expo-crypto';
 import ColorsMenu from './ColorsMenu'
 import { Header } from '../Header'
 
@@ -19,10 +19,10 @@ export const Daily = () => {
   const navigation = useNavigate()
   const [visible, setVisible] = useState(null);
 
-  const ramdonKey = async () => {
-    return uuidv4();
+  const randomKey = async () => {
+    const randomBytes = await Crypto.getRandomBytesAsync(16);
+    return [...randomBytes].map(b => b.toString(16).padStart(2, '0')).join('');
   };
-
   function handleColorInput (index) {
     if (visible == null || (visible !== null && visible !== index)) {
       setVisible(index)
@@ -154,17 +154,17 @@ export const Daily = () => {
     }
   }
   
-
   useEffect(() => {
     async function a () {
+
       let presetHours = []
       let storedDayStart = parseInt(await AsyncStorage.getItem('dayStart'))
       const hoursOfDay = hourOfDayCustom(storedDayStart)
       hoursOfDay.map((hour) => {
-        presetHours.push({index: ramdonKey(), hours: [hour], text: "", selected: false, color: "#dedede",})
+        presetHours.push({index: randomKey(), hours: [hour], text: "", selected: false, color: "#dedede",})
       })
       let storedHours = JSON.parse(await AsyncStorage.getItem('hours'))
-      if (storedHours.length <= 0 || !storedHours) {
+      if (!storedHours || storedHours.length <= 0) {
         storedHours = presetHours
       }
       setHours(storedHours)

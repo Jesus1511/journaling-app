@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNPickerSelect from 'react-native-picker-select';
 import { Task } from './Task';
 import { getTranslation } from '../../utils';
-import { v4 as uuidv4 } from 'uuid';
+import * as Crypto from 'expo-crypto';
 
 
 const {width} = Dimensions.get("window");
@@ -14,8 +14,9 @@ export const SecundaryGoals = () => {
   const [importance, setImportance] = useState(10); // Inicializamos el porcentaje de importancia
   const [secundaryGoals, setSecundaryGoals] = useState(null);
 
-  const ramdonKey = async () => {
-    return uuidv4();
+  const randomKey = async () => {
+    const randomBytes = await Crypto.getRandomBytesAsync(16);
+    return [...randomBytes].map(b => b.toString(16).padStart(2, '0')).join('');
   };
 
   const calculateTotalImportance = () => {
@@ -36,7 +37,7 @@ export const SecundaryGoals = () => {
     if (value == "") {
       return
     }
-    const newElement = { text: value, importance: importance, index: ramdonKey(), complete: false };
+    const newElement = { text: value, importance: importance, index: randomKey(), complete: false };
     const newGoals = [...secundaryGoals, newElement].sort((a, b) => b.importance - a.importance); // Ordenar por importancia
     setSecundaryGoals(newGoals);
     setValue("");

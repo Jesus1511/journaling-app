@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNPickerSelect from 'react-native-picker-select';
 import { getTranslation } from '../../utils';
-import { v4 as uuidv4 } from 'uuid';
+import * as Crypto from 'expo-crypto';
 import { Task } from './Task';
 import { useNavigate } from 'react-router-native';
 import {Header} from '../Header'
@@ -17,8 +17,9 @@ const setMonthGoals = () => {
     const [listo, setListo] = useState(false)
     const navigation = useNavigate()
 
-    const ramdonKey = async () => {
-      return uuidv4();
+    const randomKey = async () => {
+      const randomBytes = await Crypto.getRandomBytesAsync(16);
+      return [...randomBytes].map(b => b.toString(16).padStart(2, '0')).join('');
     };
 
     const generatePickerItems = () => {
@@ -62,7 +63,7 @@ const setMonthGoals = () => {
         alert('Solo puedes crear 3 tareas.');
         return;
       }
-      const newElement = { text: value, importance: importance, index: ramdonKey() };
+      const newElement = { text: value, importance: importance, index: randomKey()() };
       const newGoals = [...secundaryGoals, newElement].sort((a, b) => a.importance - b.importance); // Ordenar por importancia
       setSecundaryGoals(newGoals);
       setValue("");
